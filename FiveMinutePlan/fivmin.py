@@ -16,11 +16,13 @@ def menu():
 		sys.stdout.write(intro)
 		sys.stdout.write("\nEnter a selection:\n\n")
         sys.stdout.write("\t0 - Risk Audit Process\n")
-		sys.stdout.write("\t1 - Test connectivity to your gateway.\n")
-		sys.stdout.write("\t2 - Test for remote connectivity.\n")
-		sys.stdout.write("\t3 - Test for DNS resolution.\n")
-		sys.stdout.write("\t4 - Display gateway IP adddress.\n")
-		numbers = colored("number (1-4)", "green")
+		sys.stdout.write("\t1 - Users and Groups\n")
+		sys.stdout.write("\t2 - System Configuration\n")
+		sys.stdout.write("\t3 - User Activities\n")
+		sys.stdout.write("\t4 - Log Analysis\n")
+        sys.stdout.write("\t5 - Persistence Mechanisms\n")
+        sys.stdout.write("\t6 - Forensics Tools\n")
+		numbers = colored("number (0-6)", "green")
 		quit = colored("\"Q/q\"", "green")
 		sys.stdout.write("\nPlease enter a "+numbers+" or "+quit+" to quit the program.\t")
 		command = input()
@@ -48,80 +50,18 @@ def menu():
 	time.sleep(0.75)
 	os.system("clear")
 
+"""
+auditing function
 
-def default():
-	# printing for troubleshooting
-	sys.stdout.write("Obtaining Default Gateway... : ")
-	with open("/proc/net/route") as nr:
-		for l in nr:
-			fields = l.strip().split()
-			#error handling
-			if fields[1] != '00000000' or not int(fields[3],16)&2:
-				continue
-			gatewayIP = socket.inet_ntoa(struct.pack("<L", int(fields[2],16)))
-			if type(gatewayIP)==type(None):
-				sys.stdout.write("Cannot determine default gateway... defaulting to loopback adddress...\n")
-				gatewayIP = "127.0.0.1"
-			return gatewayIP
-
-def inform(response):
-	#default response message at end of command
-	sys.stdout.write("\nPlease inform your system administrator that the test was "+response+"!\n\n")
-	
-
-def success():
-	#success message
-	success = colored("SUCCESSFUL", "yellow")
-	inform(success)
-
-def failure():
-	#failure message
-	failure = colored("A FAILURE", "red")
-	inform(failure)
-
-def ping(host):
-	try:
-		response = subprocess.check_output(["ping", "-c", "4", "host"], stderr = subprocess.STDOUT,universal_newlines = True)
-		success()
-	except:
-		failure()
-
-def gateway():
-	os.system('clear')
-	sys.stdout.write("Testing Connectivity to your gateway...\n\n")
-	#getting dns from system
-	gatewayIP = default()	
-	if type(gatewayIP)==type(None):
-		sys.stdout.write("Cannot determine default gateway... defaulting to loopback adddress... \n")
-		gatewayIP = "127.0.0.1"
-	else:
-		sys.stdout.write("Your default gateway IP is "+gatewayIP+" \n\n")
-	#wait to let user read
-	time.sleep(1)
-	os.system('clear')
-	sys.stdout.write("Running test, please wait.\n\n")
-	ping(gatewayIP)
-	
-def remote():
-	os.system('clear')
-	sys.stdout.write("Testing for remote connectivity... trying IP address 129.21.3.17\n\n")
-	#wait to let user read
-	time.sleep(1)
-	os.system('clear')
-	sys.stdout.write("Running test, please wait.\n\n")
-	ritDNS = "129.21.3.17"
-	ping(ritDNS)
+hunts passwords, hunts for ssh keys,linpeas, linux smart enumaration
+"""
+def audit():
+    sys.stdout.write("Initializing audit...\n\n")
+    sys.stdout.write("Hunting for passwords...\n")
+    os.system("grep --color = auto -rnw '/' -ie \"PASSWORD\" --color=always 2> /dev/null")
 
 
-def dns():
-	os.system('clear')
-	sys.stdout.write("Resolving DNS: trying URL... \"www.google.com\"\n\n")
-	#wait
-	time.sleep(1)
-	os.system('clear')
-	sys.stdout.write("Running test, please wait.\n\n")
-	google = "www.google.com"
-	ping(google)
-
-if __name__ == "__main__":
-	main()
+dict{
+    0 : audit(),
+     
+}
